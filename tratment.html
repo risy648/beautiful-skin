@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>施術から探す｜渡韓美容クリニックのカルテ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+:root{
+  --ink:#2A2329;          /* charcoal text */
+  --ink-soft:#6B5E66;
+  --ink-faint:#A89BA3;
+  --paper:#FBF7F4;        /* warm paper */
+  --paper-2:#F4ECE8;
+  --rouge:#C2456A;        /* primary rouge */
+  --rouge-deep:#9A2F4F;
+  --rouge-soft:#F7E4EA;
+  --gold:#B08A4F;         /* seal / accent gold */
+  --line:rgba(42,35,41,0.10);
+  --line-soft:rgba(42,35,41,0.06);
+  --shadow:0 6px 26px rgba(120,70,90,0.10);
+  --r:18px;
+  --r-sm:11px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Zen Kaku Gothic New',sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+/* ====== ambient paper background ====== */
+.bg-field{position:fixed;inset:0;z-index:-1;background:var(--paper);overflow:hidden}
+.bg-field::before{content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 12% 0%, #FBE8EE 0%, transparent 55%),
+    radial-gradient(ellipse 50% 36% at 100% 22%, #F3EBF2 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 50% 108%, #FAEAE2 0%, transparent 60%);
+  opacity:.85}
+.bg-field::after{content:'';position:absolute;inset:0;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg width='42' height='42' viewBox='0 0 42 42' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C2456A' fill-opacity='0.05'%3E%3Ccircle cx='21' cy='21' r='1.2'/%3E%3C/g%3E%3C/svg%3E")}
+
+/* ====== top utility bar ====== */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand .mark{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:20px;letter-spacing:.04em;color:var(--ink)}
+.brand .mark em{font-style:normal;color:var(--rouge)}
+.brand .romaji{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-faint)}
+.topbar .seal{font-size:10px;letter-spacing:.2em;color:var(--gold);border:1px solid var(--gold);border-radius:999px;padding:4px 11px;white-space:nowrap}
+@media(max-width:560px){.topbar .seal{display:none}}
+
+/* ====== hero ====== */
+.hero{padding:54px 0 40px;position:relative}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge);margin-bottom:22px}
+.hero-eyebrow::before{content:'';width:26px;height:1px;background:var(--rouge);opacity:.6}
+.hero h1{font-family:'Zen Old Mincho',serif;font-weight:700;font-size:clamp(30px,6vw,52px);line-height:1.28;letter-spacing:.01em;margin-bottom:22px}
+.hero h1 .vert{color:var(--rouge)}
+.hero h1 .sm{font-size:.5em;display:block;color:var(--ink-soft);letter-spacing:.06em;margin-top:14px;font-weight:500}
+.hero-lead{font-size:15px;color:var(--ink-soft);max-width:560px;line-height:1.95}
+.hero-stats{display:flex;gap:28px;margin-top:30px;flex-wrap:wrap}
+.hstat{display:flex;flex-direction:column}
+.hstat b{font-family:'Zen Old Mincho',serif;font-size:26px;color:var(--rouge-deep);line-height:1}
+.hstat span{font-size:11px;color:var(--ink-faint);margin-top:6px;letter-spacing:.04em}
+.hstat .div{width:1px;align-self:stretch;background:var(--line)}
+
+/* ====== section frame ====== */
+.section{padding:46px 0}
+.section-tag{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.section-tag .no{font-family:'Zen Old Mincho',serif;font-size:13px;color:var(--gold);letter-spacing:.1em;font-weight:700}
+.section-tag .ln{flex:1;height:1px;background:var(--line)}
+.section-tag .ja{font-size:11px;letter-spacing:.2em;color:var(--ink-faint)}
+.section-title{font-family:'Zen Old Mincho',serif;font-size:clamp(22px,4vw,30px);font-weight:700;margin-bottom:10px;letter-spacing:.02em}
+.section-sub{font-size:13.5px;color:var(--ink-soft);max-width:620px;margin-bottom:30px;line-height:1.85}
+
+/* ====== KARTE FINDER (core tool) ====== */
+.karte{background:rgba(255,255,255,0.78);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden}
+.karte-head{background:linear-gradient(110deg,var(--rouge) 0%,var(--rouge-deep) 100%);color:#fff;padding:20px 24px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.karte-head::after{content:'問診';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-family:'Zen Old Mincho',serif;font-size:54px;font-weight:900;color:rgba(255,255,255,0.10);letter-spacing:.1em}
+.karte-head .ic{font-size:24px}
+.karte-head h3{font-family:'Zen Old Mincho',serif;font-size:18px;font-weight:700;letter-spacing:.04em}
+.karte-head p{font-size:11.5px;opacity:.82;margin-top:2px}
+.karte-body{padding:8px 24px 24px}
+
+.q-block{padding:22px 0;border-bottom:1px dashed var(--line)}
+.q-block:last-of-type{border-bottom:none}
+.q-label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;margin-bottom:14px;color:var(--ink)}
+.q-label .q-no{width:22px;height:22px;border-radius:50%;background:var(--rouge-soft);color:var(--rouge-deep);font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'Zen Old Mincho',serif;font-weight:700;flex-shrink:0}
+.q-hint{font-size:11px;color:var(--ink-faint);font-weight:400;margin-left:4px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;transition:all .18s;user-select:none}
+.chip:hover{border-color:var(--rouge);color:var(--rouge)}
+.chip.on{background:var(--rouge);border-color:var(--rouge);color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(194,69,106,0.25)}
+.chip .ti{font-size:14px;margin-right:5px;vertical-align:-1px}
+
+/* type cards (axis 1) */
+.type-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.type-card{border:1.5px solid var(--line);border-radius:var(--r-sm);padding:16px 16px 14px;cursor:pointer;background:#fff;transition:all .18s;position:relative}
+.type-card:hover{border-color:var(--rouge);transform:translateY(-2px)}
+.type-card.on{border-color:var(--rouge);background:var(--rouge-soft);box-shadow:0 4px 14px rgba(194,69,106,0.16)}
+.type-card .tc-ic{font-size:22px;color:var(--rouge);margin-bottom:8px}
+.type-card h4{font-size:14px;font-weight:700;margin-bottom:5px;font-family:'Zen Old Mincho',serif}
+.type-card p{font-size:11.5px;color:var(--ink-soft);line-height:1.65}
+.type-card .check{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}
+.type-card.on .check{background:var(--rouge);border-color:var(--rouge);color:#fff}
+
+/* budget slider */
+.budget-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.budget-wrap input[type=range]{flex:1;min-width:200px;accent-color:var(--rouge);height:4px}
+.budget-val{font-family:'Zen Old Mincho',serif;font-size:20px;font-weight:700;color:var(--rouge-deep);min-width:128px;text-align:center;background:var(--paper-2);border-radius:var(--r-sm);padding:7px 12px}
+
+/* karte footer / result count */
+.karte-foot{background:var(--paper-2);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.foot-count{font-size:13px;color:var(--ink-soft)}
+.foot-count b{font-family:'Zen Old Mincho',serif;font-size:22px;color:var(--rouge-deep);margin:0 3px}
+.btn-reset{font-size:12px;color:var(--ink-faint);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.btn-reset:hover{color:var(--rouge)}
+
+/* ====== results: KARTE cards ====== */
+.results{margin-top:30px;display:flex;flex-direction:column;gap:18px}
+.result-lead{font-size:13px;color:var(--ink-soft);margin-bottom:4px}
+.result-lead b{color:var(--rouge-deep)}
+.kcard{background:rgba(255,255,255,0.92);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;position:relative;animation:rise .4s ease backwards}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.kcard-thumb{height:108px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.kcard-thumb.factory{background:linear-gradient(120deg,#EFE6E0,#E3D5C8)}
+.kcard-thumb.premium{background:linear-gradient(120deg,#F3E6EC,#E9D6E3)}
+.kcard-thumb .thumb-ic{font-size:30px;color:rgba(154,47,79,0.35);position:relative;z-index:1}
+.kcard-thumb.premium .thumb-ic{color:rgba(122,74,147,0.4)}
+.kcard-thumb::before{content:'';position:absolute;inset:0;opacity:.5;background-image:radial-gradient(circle,rgba(255,255,255,0.5) 1px,transparent 1.4px);background-size:14px 14px}
+.kcard-thumb .thumb-label{position:absolute;bottom:8px;left:12px;font-size:10px;letter-spacing:.1em;color:rgba(42,35,41,0.45);background:rgba(255,255,255,0.6);padding:3px 9px;border-radius:999px;z-index:1}
+.kcard-thumb .thumb-photo-link{position:absolute;top:8px;right:10px;font-size:10px;color:var(--rouge-deep);background:rgba(255,255,255,0.85);padding:4px 10px;border-radius:999px;text-decoration:none;z-index:1;display:flex;align-items:center;gap:3px;font-weight:700}
+.kcard-thumb .thumb-photo-link:hover{background:#fff}
+.kcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:18px 20px 14px;border-bottom:1px solid var(--line-soft)}
+.kcard-rank{position:absolute;top:0;left:0;background:var(--ink);color:var(--paper);font-family:'Zen Old Mincho',serif;font-size:13px;font-weight:700;padding:5px 13px 6px;border-radius:0 0 var(--r-sm) 0;letter-spacing:.05em}
+.kcard-rank.best{background:linear-gradient(120deg,var(--gold),#caa66a)}
+.kcard h3{font-family:'Zen Old Mincho',serif;font-size:18px;font-weight:700;margin:14px 0 4px;letter-spacing:.02em;padding-left:2px}
+.kcard .area{font-size:11.5px;color:var(--ink-faint);display:flex;align-items:center;gap:4px}
+.type-badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.type-badge.factory{background:#E7F1EC;color:#2E7D5B}
+.type-badge.premium{background:#EFE7F3;color:#7A4A93}
+.kcard-desc{padding:12px 20px 4px;font-size:13px;color:var(--ink-soft);line-height:1.8}
+
+/* spec table — the "5 second" karte spec */
+.spec-table{margin:12px 20px 18px;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.spec-row{display:grid;grid-template-columns:96px 1fr;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+.spec-row:last-child{border-bottom:none}
+.spec-row dt{background:var(--paper-2);padding:9px 12px;color:var(--ink-soft);font-weight:700;display:flex;align-items:center;gap:5px}
+.spec-row dd{padding:9px 13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.spec-yes{color:#2E7D5B;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.spec-no{color:var(--ink-faint);display:inline-flex;align-items:center;gap:3px}
+.pricepill{font-family:'Zen Old Mincho',serif;font-weight:700;color:var(--rouge-deep)}
+.t-pill{font-size:11px;padding:2px 9px;border-radius:999px;background:var(--rouge-soft);color:var(--rouge-deep)}
+
+.kcard-foot{display:flex;gap:10px;flex-wrap:wrap;padding:0 20px 18px;align-items:center}
+
+/* 2カラム：左=院情報 / 右=施術メニュー */
+.kcard-cols{display:grid;grid-template-columns:1fr 270px}
+.kcard-left{border-right:1px solid var(--line-soft);min-width:0}
+.kcard-right{background:linear-gradient(180deg,rgba(247,228,234,0.5),rgba(255,255,255,0.4));padding:16px 18px 18px;display:flex;flex-direction:column}
+.menu-head{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rouge-deep);font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:13px}
+.menu-head::after{content:'';flex:1;height:1px;background:var(--line)}
+.menu-item{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--line)}
+.menu-item:last-of-type{border-bottom:none}
+.menu-ic{width:32px;height:32px;border-radius:9px;background:#fff;border:1px solid var(--line);color:var(--rouge);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.menu-txt h5{font-size:12.5px;font-weight:700;margin-bottom:3px;line-height:1.4}
+.menu-txt .for{font-size:10px;color:var(--rouge-deep);background:var(--rouge-soft);border-radius:999px;padding:1px 8px;display:inline-block;margin-bottom:4px}
+.menu-txt p{font-size:11px;color:var(--ink-soft);line-height:1.6}
+.menu-price{font-size:11px;color:var(--ink-soft);margin-top:5px;display:flex;align-items:center;gap:4px}
+.menu-price .ti{font-size:12px;color:var(--gold)}
+.menu-price b{font-family:'Zen Old Mincho',serif;color:var(--rouge-deep);font-weight:700;font-size:12px}
+.menu-stars{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.star-row{display:inline-flex;align-items:center;gap:4px;font-size:13px;letter-spacing:1px;line-height:1}
+.star-label{font-size:10px;color:var(--ink-soft);letter-spacing:0;white-space:nowrap;margin-right:2px}
+.st-fill{color:#FFB800}
+.st-empty{color:#E0D8DC}
+@media(max-width:680px){
+  .kcard-cols{grid-template-columns:1fr}
+  .kcard-left{border-right:none;border-bottom:1px solid var(--line-soft)}
+  .kcard-right{background:linear-gradient(180deg,rgba(247,228,234,0.4),rgba(255,255,255,0.3))}
+}
+.btn-hp{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;text-decoration:none;padding:9px 18px;border-radius:999px;color:#fff;background:linear-gradient(120deg,var(--rouge),var(--rouge-deep));box-shadow:0 3px 12px rgba(194,69,106,0.28);transition:transform .15s}
+.btn-hp:hover{transform:translateY(-1px)}
+.btn-map{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;text-decoration:none;color:var(--gold);font-weight:700}
+.btn-map:hover{opacity:.7}
+
+.empty{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:13.5px;border:1px dashed var(--line);border-radius:var(--r);background:rgba(255,255,255,0.5)}
+.empty .ti{font-size:30px;color:var(--ink-faint);display:block;margin-bottom:10px}
+
+/* ====== entry gate ====== */
+.gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.gate-card{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.88);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 26px 26px;transition:all .22s;position:relative;overflow:hidden}
+.gate-card::after{content:'';position:absolute;right:-30px;bottom:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,var(--rouge-soft),transparent 70%);opacity:.7}
+.gate-card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--rouge)}
+.gate-card.alt::after{background:radial-gradient(circle,#EFE7F3,transparent 70%)}
+.gate-ic{width:54px;height:54px;border-radius:15px;background:var(--rouge-soft);color:var(--rouge);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px;position:relative}
+.gate-card.alt .gate-ic{background:#EFE7F3;color:#7A4A93}
+.gate-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;position:relative}
+.gate-card h3{font-family:'Zen Old Mincho',serif;font-size:22px;font-weight:700;margin-bottom:10px;letter-spacing:.02em;position:relative}
+.gate-card p{font-size:13px;color:var(--ink-soft);line-height:1.85;margin-bottom:18px;position:relative}
+.gate-go{font-size:13px;font-weight:700;color:var(--rouge);display:inline-flex;align-items:center;gap:5px;position:relative}
+.gate-card.alt .gate-go{color:#7A4A93}
+@media(max-width:640px){.gate-grid{grid-template-columns:1fr}}
+
+/* ====== article nav cards ====== */
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.art-card{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,0.85);border:1px solid var(--line);border-radius:var(--r);padding:24px 22px 22px;transition:all .2s;position:relative;overflow:hidden}
+.art-card::before{content:attr(data-kanji);position:absolute;right:-6px;bottom:-18px;font-family:'Zen Old Mincho',serif;font-size:80px;font-weight:900;color:var(--rouge);opacity:.05;line-height:1;pointer-events:none}
+.art-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--rouge)}
+.art-card .ac-ic{width:46px;height:46px;border-radius:13px;background:var(--rouge-soft);color:var(--rouge);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.art-card .ac-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.art-card h4{font-family:'Zen Old Mincho',serif;font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:.02em}
+.art-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.75;margin-bottom:14px}
+.art-card .ac-go{font-size:12px;font-weight:700;color:var(--rouge);display:inline-flex;align-items:center;gap:4px}
+
+/* ====== footer ====== */
+.foot{margin-top:50px;background:var(--ink);color:rgba(251,247,244,0.6);padding:44px 0 30px}
+.foot .brand .mark{color:#fff}.foot .brand .mark em{color:var(--rouge-soft)}
+.foot .brand .romaji{color:rgba(255,255,255,0.3)}
+.foot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 24px}
+.foot-block{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:15px 17px}
+.foot-block h5{font-size:12px;font-weight:700;color:rgba(255,255,255,0.78);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.foot-block p{font-size:11px;color:rgba(255,255,255,0.42);line-height:1.8}
+.foot-copy{font-size:10.5px;color:rgba(255,255,255,0.28);text-align:center;border-top:1px solid rgba(255,255,255,0.08);padding-top:18px;line-height:1.8}
+
+@media(max-width:640px){
+  .type-cards{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .kcard-top{flex-direction:column}
+  .spec-row{grid-template-columns:84px 1fr}
+  .hero-stats{gap:18px}
+  .hstat .div{display:none}
+}
+/* ====== global nav ====== */
+.topbar{position:relative}
+.nav{display:flex;align-items:center;gap:4px}
+.nav a{font-size:13px;color:var(--ink-soft);text-decoration:none;padding:8px 13px;border-radius:999px;transition:all .16s;white-space:nowrap;letter-spacing:.02em}
+.nav a:hover{color:var(--rouge);background:var(--rouge-soft)}
+.nav a.active{color:var(--rouge-deep);font-weight:700}
+.nav a.cta{background:var(--rouge);color:#fff;font-weight:700;margin-left:6px}
+.nav a.cta:hover{background:var(--rouge-deep);color:#fff}
+.nav-toggle{display:none;background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:38px;cursor:pointer;font-size:20px;color:var(--ink);align-items:center;justify-content:center}
+@media(max-width:860px){
+  .topbar .seal{display:none}
+  .nav-toggle{display:flex}
+  .nav{position:absolute;top:calc(100% + 8px);right:0;left:0;flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:14px;
+    padding:8px;box-shadow:var(--shadow);z-index:50;display:none}
+  .nav.open{display:flex;animation:rise .2s ease}
+  .nav a{padding:12px 14px;border-radius:10px;font-size:14px}
+  .nav a.cta{margin-left:0;margin-top:4px;text-align:center}
+}
+</style>
+<style>
+.treat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:6px}
+.treat-card{background:rgba(255,255,255,0.85);border:1.5px solid var(--line);border-radius:var(--r-sm);padding:18px 16px;cursor:pointer;transition:all .18s;text-align:center}
+.treat-card:hover{border-color:var(--rouge);transform:translateY(-3px);box-shadow:var(--shadow)}
+.treat-card.on{border-color:var(--rouge);background:var(--rouge-soft);box-shadow:0 4px 14px rgba(194,69,106,0.16)}
+.treat-card .tc-ic{font-size:26px;color:var(--rouge);margin-bottom:10px}
+.treat-card h4{font-family:'Zen Old Mincho',serif;font-size:14.5px;font-weight:700;margin-bottom:6px}
+.treat-card p{font-size:11px;color:var(--ink-soft);line-height:1.6}
+.treat-detail{background:rgba(255,255,255,0.9);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:24px;margin-top:24px;display:none}
+.treat-detail.show{display:block;animation:rise .35s ease}
+.td-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.td-ic{width:50px;height:50px;border-radius:14px;background:var(--rouge-soft);color:var(--rouge);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.td-head h3{font-family:'Zen Old Mincho',serif;font-size:19px;font-weight:700}
+.td-head p{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+.td-stats{display:flex;gap:24px;margin:16px 0 4px;flex-wrap:wrap}
+.td-stat{font-size:12px;color:var(--ink-soft)}
+.td-stat b{display:block;font-family:'Zen Old Mincho',serif;font-size:15px;color:var(--rouge-deep);margin-bottom:2px}
+.match-sub{margin-top:26px}
+.match-sub h4{font-family:'Zen Old Mincho',serif;font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+</style>
+</head>
+<body>
+<div class="bg-field"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <a href="index.html" style="text-decoration:none;color:inherit"><span class="mark">渡韓美容<em>カルテ</em></span></a>
+      <span class="romaji">tokan karte</span>
+    </div>
+    <nav class="nav" id="nav">
+      <a href="index.html#finder">病院から探す</a>
+      <a href="treatment.html" class="active">施術から探す</a>
+      <a href="experience.html">体験記事</a>
+      <a href="homecare.html">ホームケア</a>
+      <a href="news.html">最新ニュース</a>
+      <a href="about.html">このサイトについて</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く" onclick="toggleNav()"><i class="ti ti-menu-2"></i></button>
+  </div>
+</div>
+
+<style>
+.worry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}
+.worry-card{background:rgba(255,255,255,0.85);border:1.5px solid var(--line);border-radius:var(--r-sm);padding:16px 14px;cursor:pointer;transition:all .18s;text-align:center}
+.worry-card:hover{border-color:var(--rouge);transform:translateY(-3px);box-shadow:var(--shadow)}
+.worry-card.on{border-color:var(--rouge);background:var(--rouge-soft);box-shadow:0 4px 14px rgba(194,69,106,0.16)}
+.worry-card .wc-ic{font-size:24px;color:var(--rouge);margin-bottom:8px}
+.worry-card h4{font-family:'Zen Old Mincho',serif;font-size:13.5px;font-weight:700}
+
+.treat-result{margin-top:8px;display:none}
+.treat-result.show{display:block;animation:rise .35s ease}
+.tr-head{display:flex;align-items:baseline;gap:10px;margin:28px 0 16px;flex-wrap:wrap}
+.tr-head h3{font-family:'Zen Old Mincho',serif;font-size:18px;font-weight:700}
+.tr-head span{font-size:12px;color:var(--ink-soft)}
+
+.tcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.tcard{background:rgba(255,255,255,0.92);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 20px 18px;position:relative;overflow:hidden;animation:rise .4s ease backwards}
+.tcard-badges{position:absolute;top:0;right:0;display:flex;gap:0}
+.badge{font-size:10.5px;font-weight:700;padding:5px 12px;letter-spacing:.05em;color:#fff}
+.badge.pop{background:linear-gradient(120deg,var(--rouge),var(--rouge-deep))}
+.badge.new{background:linear-gradient(120deg,var(--gold),#caa66a)}
+.tcard-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.tcard-ic{width:44px;height:44px;border-radius:13px;background:var(--rouge-soft);color:var(--rouge);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.tcard h3{font-family:'Zen Old Mincho',serif;font-size:15.5px;font-weight:700;line-height:1.4;margin-bottom:3px}
+.tcard .tcard-en{font-size:10px;color:var(--ink-faint);letter-spacing:.04em}
+.tcard-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.8;margin-bottom:14px}
+.tcard-stars{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;padding:12px 14px;background:var(--paper-2);border-radius:var(--r-sm)}
+.tcard-price{display:flex;align-items:center;justify-content:space-between;border-top:1px dashed var(--line);padding-top:12px}
+.tcard-price .label{font-size:11px;color:var(--ink-faint)}
+.tcard-price .val{font-family:'Zen Old Mincho',serif;font-weight:700;color:var(--rouge-deep);font-size:15px}
+.tcard-note{font-size:10.5px;color:var(--ink-faint);margin-top:8px;display:flex;align-items:center;gap:4px}
+</style>
+
+<header class="wrap page-hero">
+  <p class="crumb"><a href="index.html">ホーム</a> ／ 施術から探す</p>
+  <h1>悩みから、施術を<em>見比べる</em>。</h1>
+  <p>気になる悩みを選ぶと、人気の定番から韓国で新しく出てきた施術まで、効果・痛み・料金目安をまとめて比較できます。</p>
+</header>
+
+<section class="wrap section" style="padding-top:10px">
+  <div class="section-tag"><span class="no">其ノ一</span><span class="ln"></span><span class="ja">CHOOSE YOUR CONCERN</span></div>
+  <h2 class="section-title">いまの肌悩みを選ぶ</h2>
+  <p class="section-sub">タップすると、その悩みに効く施術がいろいろ出てきます。複数の悩みを見比べてもOK。</p>
+
+  <div class="worry-grid" id="worry-grid"></div>
+
+  <div class="treat-result" id="treat-result"></div>
+</section>
+<footer class="foot">
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark">渡韓美容<em>カルテ</em></span>
+      <span class="romaji">tokan karte</span>
+    </div>
+    <div class="foot-grid">
+      <div class="foot-block">
+        <h5><i class="ti ti-info-circle"></i> 情報の正確性について</h5>
+        <p>掲載されているクリニック・施術・料金は公開情報と渡韓経験をもとにした参考情報です。料金・営業時間・メニュー・サポート体制は予告なく変更される場合があります。必ず各クリニック・公式サイトにてご確認ください。</p>
+      </div>
+      <div class="foot-block">
+        <h5><i class="ti ti-stethoscope"></i> 医療行為ではありません</h5>
+        <p>本サイトは美容医療に関する一般的な情報提供を目的としており、医療診断・治療の代替ではありません。施術は必ず有資格の医師にご相談のうえ、ご自身の判断と責任でお決めください。効果・リスクには個人差があります。</p>
+      </div>
+    </div>
+    <p class="foot-copy">© 2025 渡韓美容クリニックのカルテ　本サイトの情報を利用したことによる損害について、当サイトは一切の責任を負いかねます。</p>
+  </div>
+</footer>
+
+<script>
+function toggleNav(){
+  var n=document.getElementById('nav');
+  var open=n.classList.toggle('open');
+  document.getElementById('nav-toggle').innerHTML=open?'<i class="ti ti-x"></i>':'<i class="ti ti-menu-2"></i>';
+}
+document.querySelectorAll('#nav a').forEach(function(a){
+  a.addEventListener('click',function(){
+    var n=document.getElementById('nav');
+    if(n.classList.contains('open')){n.classList.remove('open');document.getElementById('nav-toggle').innerHTML='<i class="ti ti-menu-2"></i>';}
+  });
+});
+
+
+var WORRY_LBL={pore:'毛穴・イチゴ鼻',wrinkle:'小顔・たるみ',dry:'ツヤ肌・水光肌',spot:'シミ・くすみ',acne:'ニキビ・赤み',scar:'ニキビ跡・凸凹'};
+var WORRY_IC={pore:'ti-circle-dotted',wrinkle:'ti-face-id',dry:'ti-droplet',spot:'ti-sun',acne:'ti-flame',scar:'ti-grain'};
+var ORDER=['pore','wrinkle','dry','spot','acne','scar'];
+
+/* 悩み別・複数施術データベース
+   tag: 'pop'=人気 / 'new'=韓国で新しく出てきている / null=通常
+   pain・effect: 1〜5の星評価 */
+var TREATMENTS={
+  pore:[
+    {name:'ポテンツァ', en:'POTENZA', ic:'ti-needle', tag:'pop', desc:'針＋RFで毛穴を引き締め、皮脂分泌を抑えてイチゴ鼻を改善。韓国で大定番のマイクロニードリングRF。', pain:3, effect:5, price:'¥15,000〜40,000', note:'1〜2週間隔・複数回推奨'},
+    {name:'毛穴専用ピーリング', en:'PORE PEELING', ic:'ti-droplet-half-2', tag:null, desc:'酸ピーリングで角質と皮脂汚れをオフ。即効性があり、施術当日から毛穴の目立ちが軽減。', pain:1, effect:2, price:'¥5,000〜12,000', note:'ダウンタイムほぼなし'},
+    {name:'AGNES（アグネス）', en:'AGNES', ic:'ti-bolt', tag:'new', desc:'極細針で皮脂腺をピンポイントに高周波焼灼。韓国で急速に人気が伸びている毛穴・皮脂治療。', pain:4, effect:5, price:'¥40,000〜90,000', note:'ダウンタイム3〜5日'},
+    {name:'CO2フラクショナルレーザー', en:'CO2 FRACTIONAL', ic:'ti-laser', tag:null, desc:'微細な穴を皮膚に開けて再生を促進。毛穴の凸凹そのものを底上げする本格レーザー。', pain:4, effect:4, price:'¥25,000〜60,000', note:'ダウンタイム3〜7日'}
+  ],
+  wrinkle:[
+    {name:'ウルセラ（HIFU）', en:'ULTHERA', ic:'ti-wave-sine', tag:'pop', desc:'高密度焦点式超音波で皮膚の深層に熱を入れ、たるみを引き上げる。韓国リフトの代名詞的施術。', pain:3, effect:5, price:'¥60,000〜150,000', note:'効果は1〜3ヶ月かけて実感'},
+    {name:'シュリンク／オリジオ', en:'SHURINK', ic:'ti-wave-sine', tag:'pop', desc:'ウルセラと同系統のHIFUながら低価格帯。コスパ重視の弾丸リフトとして定番。', pain:3, effect:4, price:'¥30,000〜80,000', note:'1回でも実感しやすい'},
+    {name:'チタニウムリフト', en:'TITANIUM LIFT', ic:'ti-sparkles', tag:'new', desc:'チタン電極で深部を加熱しコラーゲン生成を促す、韓国の上質クリニックで広がる最新リフト。', pain:2, effect:4, price:'¥50,000〜120,000', note:'ダウンタイムが少ない'},
+    {name:'糸リフト（リードファイバー）', en:'THREAD LIFT', ic:'ti-axe', tag:null, desc:'溶ける糸を皮下に通して物理的に引き上げる施術。フェイスラインの輪郭をはっきりさせたい人向け。', pain:4, effect:4, price:'¥40,000〜100,000', note:'ダウンタイム5〜10日'}
+  ],
+  dry:[
+    {name:'水光注射（リジュラン等）', en:'WATER GLOW', ic:'ti-droplet', tag:'pop', desc:'真皮にヒアルロン酸や成長因子を注入し、内側からうるおう水光肌へ。韓国渡韓施術の王道。', pain:2, effect:4, price:'¥15,000〜35,000', note:'1〜2週間でツヤ実感'},
+    {name:'リジュラン（サーモン注射）', en:'REJURAN', ic:'ti-fish', tag:'new', desc:'サケのDNA由来成分PDRNで肌の再生力を底上げ。韓国で人気急上昇中のエイジングケア注射。', pain:3, effect:5, price:'¥25,000〜55,000', note:'3〜4週間隔で複数回推奨'},
+    {name:'エクソソームスキンブースター', en:'EXOSOME', ic:'ti-vaccine', tag:'new', desc:'幹細胞由来エクソソームで肌再生を促進する、韓国の上質クリニックで導入が進む最新メニュー。', pain:2, effect:5, price:'¥40,000〜90,000', note:'即効性と持続性の両立が話題'},
+    {name:'プロファイロ', en:'PROFHILO', ic:'ti-droplet', tag:null, desc:'高濃度ヒアルロン酸を数点注入し、肌全体にハリとうるおいを面で広げる施術。', pain:2, effect:4, price:'¥30,000〜60,000', note:'2回セットが基本'}
+  ],
+  spot:[
+    {name:'レーザートーニング', en:'LASER TONING', ic:'ti-sun', tag:'pop', desc:'低出力レーザーを複数回当ててメラニンを少しずつ分解。韓国シミ治療の定番ベース施術。', pain:1, effect:3, price:'¥8,000〜20,000', note:'5回前後のコース推奨'},
+    {name:'ピコレーザー', en:'PICO LASER', ic:'ti-bolt', tag:'pop', desc:'ピコ秒単位の超短パルスでメラニンを微粉砕。トーニングより少ない回数で効果を狙える。', pain:2, effect:4, price:'¥12,000〜30,000', note:'ダウンタイム少なめ'},
+    {name:'ジェムストーン／ピコトーニング複合', en:'GEMSTONE', ic:'ti-diamond', tag:'new', desc:'複数波長を組み合わせた最新マシンで、シミ・毛穴・色ムラを一度にケア。韓国上質型院で導入進行中。', pain:2, effect:4, price:'¥30,000〜70,000', note:'肌質改善も同時に狙える'},
+    {name:'IPL（フォトフェイシャル）', en:'IPL', ic:'ti-flash', tag:null, desc:'広域の光でシミ・赤み・くすみをまとめてケア。肌全体のトーンアップを狙いたい人向け。', pain:1, effect:3, price:'¥10,000〜25,000', note:'季節の変わり目におすすめ'}
+  ],
+  acne:[
+    {name:'LEDフォトセラピー', en:'LED THERAPY', ic:'ti-bulb', tag:null, desc:'赤色・青色光で炎症と皮脂分泌を抑制。痛みがほぼなく、施術後すぐにメイクも可能。', pain:1, effect:2, price:'¥5,000〜12,000', note:'継続ケア向き'},
+    {name:'ニキビ管理（圧出＋鎮静）', en:'ACNE CARE', ic:'ti-flame', tag:'pop', desc:'専門医による圧出と鎮静パックのセット。韓国皮膚科で最も基本的なニキビ施術。', pain:2, effect:3, price:'¥6,000〜15,000', note:'定期通院で効果が安定'},
+    {name:'サリチル酸ピーリング', en:'SALICYLIC PEEL', ic:'ti-droplet-half-2', tag:null, desc:'皮脂と角質を分解し毛穴づまりを解消。赤みニキビ・初期ニキビに向く低刺激ピーリング。', pain:1, effect:3, price:'¥7,000〜15,000', note:'ダウンタイムほぼなし'},
+    {name:'PDT光線力学治療', en:'PDT', ic:'ti-bolt', tag:'new', desc:'光感受性物質と光を組み合わせ、皮脂腺に直接アプローチ。難治性ニキビに強い韓国の先進治療。', pain:3, effect:4, price:'¥20,000〜45,000', note:'複数回コースが基本'}
+  ],
+  scar:[
+    {name:'ダーマペン', en:'DERMAPEN', ic:'ti-grain', tag:'pop', desc:'極細針で肌に微細な穴を開け、自己再生力でニキビ跡の凸凹をなめらかに。韓国の定番再生施術。', pain:3, effect:4, price:'¥20,000〜45,000', note:'4週間隔で複数回推奨'},
+    {name:'フラクショナルレーザー（CO2/Er）', en:'FRACTIONAL', ic:'ti-laser', tag:null, desc:'レーザーで深いクレーター状の跡にアプローチ。ダーマペンより強めの凸凹に向く本格治療。', pain:4, effect:5, price:'¥30,000〜70,000', note:'ダウンタイム5〜7日'},
+    {name:'TCAクロス', en:'TCA CROSS', ic:'ti-needle', tag:null, desc:'高濃度の薬剤を毛穴・クレーター部分にピンポイントで塗布し、再生を促す部分集中治療。', pain:4, effect:4, price:'¥15,000〜35,000', note:'深いクレーターに有効'},
+    {name:'リジュランターンオーバー', en:'REJURAN TURNOVER', ic:'ti-fish', tag:'new', desc:'PDRN成分でニキビ跡の修復力を底上げする最新アプローチ。韓国上質型院で人気が拡大中。', pain:3, effect:4, price:'¥30,000〜60,000', note:'ダーマペンと併用されることも'}
+  ]
+};
+
+function stars(n){var s='';for(var i=1;i<=5;i++)s+='<span class="'+(i<=n?'st-fill':'st-empty')+'">★</span>';return s;}
+
+var selectedWorries=[];
+
+function buildWorryGrid(){
+  var grid=document.getElementById('worry-grid');
+  var html='';
+  ORDER.forEach(function(w){
+    html+='<div class="worry-card" id="wc-'+w+'" onclick="toggleWorry(\''+w+'\')">'
+      +'<div class="wc-ic"><i class="ti '+WORRY_IC[w]+'"></i></div>'
+      +'<h4>'+WORRY_LBL[w]+'</h4>'
+      +'</div>';
+  });
+  grid.innerHTML=html;
+}
+
+function toggleWorry(w){
+  var el=document.getElementById('wc-'+w);
+  var i=selectedWorries.indexOf(w);
+  if(i>-1){selectedWorries.splice(i,1);el.classList.remove('on');}
+  else{selectedWorries.push(w);el.classList.add('on');}
+  renderResults();
+}
+
+function badgeHtml(tag){
+  if(tag==='pop') return '<span class="badge pop"><i class="ti ti-flame"></i> 人気</span>';
+  if(tag==='new') return '<span class="badge new"><i class="ti ti-sparkles"></i> NEW</span>';
+  return '';
+}
+
+function renderResults(){
+  var box=document.getElementById('treat-result');
+  if(selectedWorries.length===0){
+    box.classList.remove('show');
+    box.innerHTML='';
+    return;
+  }
+  box.classList.add('show');
+
+  var order=ORDER.filter(function(w){return selectedWorries.indexOf(w)>-1;});
+  var html='';
+  order.forEach(function(w){
+    var list=TREATMENTS[w];
+    html+='<div class="tr-head"><h3><i class="ti '+WORRY_IC[w]+'"></i> '+WORRY_LBL[w]+'に効く施術</h3><span>'+list.length+'件</span></div>';
+    html+='<div class="tcard-grid">';
+    list.forEach(function(t,idx){
+      html+='<div class="tcard" style="animation-delay:'+(idx*0.05)+'s">'
+        + (t.tag?'<div class="tcard-badges">'+badgeHtml(t.tag)+'</div>':'')
+        + '<div class="tcard-top"><div class="tcard-ic"><i class="ti '+t.ic+'"></i></div>'
+        + '<div><h3>'+t.name+'</h3><span class="tcard-en">'+t.en+'</span></div></div>'
+        + '<p class="tcard-desc">'+t.desc+'</p>'
+        + '<div class="tcard-stars">'
+        + '<span class="star-row"><span class="star-label">😣 痛み</span>'+stars(t.pain)+'</span>'
+        + '<span class="star-row"><span class="star-label">✨ 効果</span>'+stars(t.effect)+'</span>'
+        + '</div>'
+        + '<div class="tcard-price"><span class="label">料金目安／1回</span><span class="val">'+t.price+'</span></div>'
+        + '<p class="tcard-note"><i class="ti ti-info-circle"></i>'+t.note+'</p>'
+        + '</div>';
+    });
+    html+='</div>';
+  });
+  box.innerHTML=html;
+}
+
+buildWorryGrid();
+
+</script>
+</body>
+</html>
