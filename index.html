@@ -129,6 +129,15 @@ body{
 .result-lead b{color:var(--rouge-deep)}
 .kcard{background:rgba(255,255,255,0.92);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;position:relative;animation:rise .4s ease backwards}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.kcard-thumb{height:108px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.kcard-thumb.factory{background:linear-gradient(120deg,#EFE6E0,#E3D5C8)}
+.kcard-thumb.premium{background:linear-gradient(120deg,#F3E6EC,#E9D6E3)}
+.kcard-thumb .thumb-ic{font-size:30px;color:rgba(154,47,79,0.35);position:relative;z-index:1}
+.kcard-thumb.premium .thumb-ic{color:rgba(122,74,147,0.4)}
+.kcard-thumb::before{content:'';position:absolute;inset:0;opacity:.5;background-image:radial-gradient(circle,rgba(255,255,255,0.5) 1px,transparent 1.4px);background-size:14px 14px}
+.kcard-thumb .thumb-label{position:absolute;bottom:8px;left:12px;font-size:10px;letter-spacing:.1em;color:rgba(42,35,41,0.45);background:rgba(255,255,255,0.6);padding:3px 9px;border-radius:999px;z-index:1}
+.kcard-thumb .thumb-photo-link{position:absolute;top:8px;right:10px;font-size:10px;color:var(--rouge-deep);background:rgba(255,255,255,0.85);padding:4px 10px;border-radius:999px;text-decoration:none;z-index:1;display:flex;align-items:center;gap:3px;font-weight:700}
+.kcard-thumb .thumb-photo-link:hover{background:#fff}
 .kcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:18px 20px 14px;border-bottom:1px solid var(--line-soft)}
 .kcard-rank{position:absolute;top:0;left:0;background:var(--ink);color:var(--paper);font-family:'Zen Old Mincho',serif;font-size:13px;font-weight:700;padding:5px 13px 6px;border-radius:0 0 var(--r-sm) 0;letter-spacing:.05em}
 .kcard-rank.best{background:linear-gradient(120deg,var(--gold),#caa66a)}
@@ -245,7 +254,8 @@ body{
       <span class="romaji">tokan karte</span>
     </div>
     <nav class="nav" id="nav">
-      <a href="#finder" class="active">クリニックを探す</a>
+      <a href="#finder" class="active">病院から探す</a>
+      <a href="treatment.html">施術から探す</a>
       <a href="experience.html">体験記事</a>
       <a href="homecare.html">ホームケア</a>
       <a href="news.html">最新ニュース</a>
@@ -262,11 +272,11 @@ body{
   <h1>あなたの<span class="vert">予算</span>と<span class="vert">悩み</span>で、<br>行くべき韓国皮膚科を<br>みつける。
     <span class="sm">おすすめを並べるだけのまとめは、もう卒業。</span>
   </h1>
-  <p class="hero-lead">「工場型」で安く弾丸ルートか、「上質型」で丁寧なカウンセリングか。通訳の常駐、睡眠麻酔まで——リアルな渡韓経験をもとに、条件を掛け合わせて“私に合う一院”を診断します。</p>
+  <p class="hero-lead">掲載するのは、すべて日本人通訳が常駐する安心のクリニックだけ。「工場型」で安く弾丸ルートか、「上質型」で丁寧なカウンセリングか。睡眠麻酔の可否、日曜営業、日本人/韓国人どちらに人気か——リアルな渡韓経験をもとに、条件を掛け合わせて“私に合う一院”を診断します。</p>
   <div class="hero-stats">
     <div class="hstat"><b id="hs-count">15</b><span>掲載クリニック</span></div>
     <div class="div"></div>
-    <div class="hstat"><b>3</b><span>掛け合わせ検索軸</span></div>
+    <div class="hstat"><b>5</b><span>掛け合わせ検索軸</span></div>
     <div class="div"></div>
     <div class="hstat"><b>2</b><span>主要エリア（明洞・江南）</span></div>
   </div>
@@ -276,7 +286,7 @@ body{
 <section class="wrap section" id="finder">
   <div class="section-tag"><span class="no">其ノ一</span><span class="ln"></span><span class="ja">CLINIC FINDER</span></div>
   <h2 class="section-title">クリニックを問診で絞り込む</h2>
-  <p class="section-sub">下の3つの軸を選ぶだけ。条件を掛け合わせるほど、あなたにぴったりの一院に近づきます。空欄のままでも構いません。</p>
+  <p class="section-sub">下のエリア・タイプ・悩みなどを選ぶだけ。条件を掛け合わせるほど、あなたにぴったりの一院に近づきます。空欄のままでも構いません。</p>
 
   <div class="karte">
     <div class="karte-head">
@@ -284,6 +294,16 @@ body{
       <div><h3>渡韓カルテ・問診票</h3><p>あてはまるものを選んでください</p></div>
     </div>
     <div class="karte-body">
+
+      <!-- AXIS 0: area -->
+      <div class="q-block">
+        <div class="q-label"><span class="q-no">零</span>エリア<span class="q-hint">明洞・江南どちらで受けたい？</span></div>
+        <div class="chips" id="area-chips">
+          <span class="chip" data-a="明洞" onclick="toggleArea(this)"><i class="ti ti-map-pin"></i>明洞</span>
+          <span class="chip" data-a="江南" onclick="toggleArea(this)"><i class="ti ti-map-pin"></i>江南</span>
+        </div>
+        <div id="area-map-wrap" style="margin-top:16px"></div>
+      </div>
 
       <!-- AXIS 1: type -->
       <div class="q-block">
@@ -319,10 +339,12 @@ body{
 
       <!-- AXIS 3: support / facility -->
       <div class="q-block">
-        <div class="q-label"><span class="q-no">参</span>安心の設備・サポート<span class="q-hint">掛け合わせ条件・複数OK</span></div>
+        <div class="q-label"><span class="q-no">参</span>その他<span class="q-hint">掛け合わせ条件・複数OK</span></div>
         <div class="chips" id="support-chips">
-          <span class="chip" data-s="jp" onclick="toggleChip(this,'support')"><i class="ti ti-language"></i>日本人通訳が常駐</span>
           <span class="chip" data-s="sleep" onclick="toggleChip(this,'support')"><i class="ti ti-zzz"></i>睡眠麻酔が可能</span>
+          <span class="chip" data-s="sun" onclick="toggleChip(this,'support')"><i class="ti ti-calendar-event"></i>日曜も営業</span>
+          <span class="chip" data-s="popjp" onclick="toggleChip(this,'support')"><i class="ti ti-flag"></i>日本人に人気</span>
+          <span class="chip" data-s="popkr" onclick="toggleChip(this,'support')"><i class="ti ti-flag"></i>韓国人に人気</span>
         </div>
       </div>
 
@@ -436,27 +458,28 @@ document.querySelectorAll('#nav a').forEach(function(a){
   (明洞=明洞 / 江南=江南, 既存データ流用 + ダミー補完)
    type:   factory(工場型) / premium(上質高品質型)
    worry:  pore / wrinkle / dry / spot / acne
-   jp:     日本人通訳常駐
+   jp:     日本人通訳常駐（全院true・掲載基準）
    sleep:  睡眠麻酔可
+   pop:    人気層 jp=日本人に人気 / kr=韓国人に人気 / both=どちらにも人気
+   sun:    日曜営業可
    price:  1回あたりの目安下限(円) ※絞り込み用ダミー
    ========================================================= */
 var CLINICS=[
-  {n:'プムグローバル 明洞店',area:'明洞',areaNote:'明洞駅8番出口 徒歩1分',type:'factory',worry:['pore','acne','spot','scar'],jp:true,sleep:true,price:15000,tag:'ポテンツァ',d:'破格の価格で渡韓初心者の入門に最適。日本語対応も手厚い大型チェーン。',u:'https://link.inpock.co.kr/ppeum_jp',ut:'公式（日本語）',map:'https://maps.google.com/?q=프름글로벌+명동점+서울'},
-  {n:'リエンジャン 明洞店',area:'明洞',areaNote:'明洞エリア',type:'factory',worry:['spot','pore','dry'],jp:true,sleep:true,price:12000,tag:'メガ院',d:'20年運営・アジア12支店のメガクリニック。安定の定番院。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝+명동점+서울'},
-  {n:'toxnfill 明洞店',area:'明洞',areaNote:'乙支路入口駅6番出口・8F',type:'factory',worry:['wrinkle','pore'],jp:false,sleep:false,price:10000,tag:'ボトックス',d:'若者に人気の低価格チェーン。34支店展開で気軽に通える。',u:'https://jp.toxnfill35.com/',ut:'公式サイト',map:'https://maps.google.com/?q=톡스앤필+명동점+서울'},
-  {n:'YOU&I皮膚科 明洞店',area:'明洞',areaNote:'明洞駅4番出口前',type:'factory',worry:['dry','spot'],jp:true,sleep:false,price:18000,tag:'水光肌',d:'バランスが良く日本人リピーター多数。水光注射が看板。',u:'https://ameblo.jp/skinuni114/',ut:'公式ブログ',map:'https://maps.google.com/?q=유앤아이피부과+명동점+서울'},
-  {n:'明洞MUSEクリニック',area:'明洞',areaNote:'明洞駅5番出口 徒歩3分',type:'premium',worry:['spot','dry','wrinkle'],jp:true,sleep:false,price:25000,tag:'トーニング',d:'明洞の老舗人気院。日本人限定プロモも実施。落ち着いた接客。',u:'https://ameblo.jp/musemdjp/',ut:'公式ブログ',map:'https://maps.google.com/?q=뮤즈클리닉+명동+서울'},
-  {n:'リーダース皮膚科 明洞',area:'明洞',areaNote:'会賢駅1番出口 直結',type:'premium',worry:['acne','pore','dry','scar'],jp:true,sleep:true,price:28000,tag:'ニキビ',d:'ソウル大出身の専門医ぞろいの実力派。難治性ニキビにも強い。',u:'https://japan.leaders-md.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리더스피부과+명동점+서울'},
-  {n:'Abijouクリニック 明洞',area:'明洞',areaNote:'乙支路入口駅6番出口',type:'premium',worry:['wrinkle','pore','acne','scar'],jp:true,sleep:true,price:40000,tag:'ダブロ',d:'芸能人の来院多数。上品で丁寧な施術とプライベート空間。',u:'https://abijouclinic.com/jpn/',ut:'公式（日本語）',map:'https://maps.google.com/?q=아비쥬클리닉+명동+서울'},
-  {n:'WIZ&美',area:'明洞',areaNote:'乙支路入口駅6番出口 徒歩3分',type:'premium',worry:['wrinkle','spot'],jp:true,sleep:false,price:35000,tag:'個室',d:'時間をかけたカウンセリングが好評。完全個室でじっくり相談。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=5384',ut:'コネスト詳細',map:'https://maps.google.com/?q=위즈앤미+명동+서울'},
-  {n:'リエンジャン 江南本店',area:'江南',areaNote:'江南大路沿いタワー内',type:'factory',worry:['spot','dry','pore'],jp:true,sleep:true,price:12000,tag:'メガ院',d:'アジア最大級ネットワークの本店。スケール感のある定番院。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝+강남본점+서울'},
-  {n:'プムグローバル 江南店',area:'江南',areaNote:'江南エリア',type:'factory',worry:['pore','acne','wrinkle','scar'],jp:true,sleep:true,price:15000,tag:'ポテンツァ',d:'2023年オープンの外国人向け店舗。日本語コーディネーター在籍。',u:'https://link.inpock.co.kr/ppeum_jp',ut:'公式（日本語）',map:'https://maps.google.com/?q=프름글로벌+강남점+서울'},
-  {n:'シャインビーム 江南店',area:'江南',areaNote:'江南駅11番出口 徒歩2分',type:'factory',worry:['pore','acne','scar'],jp:true,sleep:false,price:13000,tag:'ポテンツァ',d:'ポテンツァの安さで話題。日本語サイト完備で予約しやすい。',u:'https://gangnam.shinebeam.co.kr/ja',ut:'公式（日本語）',map:'https://maps.google.com/?q=샤인빔+강남점+서울'},
-  {n:'YOU&I皮膚科 江南店',area:'江南',areaNote:'江南駅エリア',type:'factory',worry:['dry','spot'],jp:true,sleep:false,price:18000,tag:'水光肌',d:'バランス型で幅広く支持。水光・美肌注射のメニューが豊富。',u:'https://ameblo.jp/skinuni114/',ut:'公式ブログ',map:'https://maps.google.com/?q=유앤아이피부과+강남점+서울'},
-  {n:'ラミチェ皮膚科',area:'江南',areaNote:'蚕室・江南駅から約15分',type:'premium',worry:['acne','pore','spot','scar'],jp:true,sleep:true,price:30000,tag:'レーザー',d:'51種以上のレーザー設備の本格派。院長が薬剤を個別調整。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=30798',ut:'予約ページ',map:'https://maps.google.com/?q=라미체피부과+서울'},
-  {n:'Seye Clinic',area:'江南',areaNote:'新ノニョン駅7番出口 徒歩1分',type:'premium',worry:['spot','wrinkle','dry'],jp:true,sleep:true,price:45000,tag:'最新機器',d:'江南最大級規模。芸能人御用達の洗練空間。最新機器を先行導入。',u:'https://seyeclinic.com/ja',ut:'公式（日本語）',map:'https://maps.google.com/?q=세이에클리닉+강남+서울'},
-  {n:'チョンダムオラクル皮膚科',area:'江南',areaNote:'清潭洞',type:'premium',worry:['wrinkle','spot','dry'],jp:true,sleep:true,price:50000,tag:'再生医療',d:'国内外100院超のオラクル旗艦院。再生医療・点滴メニューが先進的。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=7140',ut:'予約ページ',map:'https://maps.google.com/?q=청담오라클피부과+서울'},
-  {n:'LIENJANG BLACK 江南',area:'江南',areaNote:'江南エリア',type:'premium',worry:['wrinkle','dry'],jp:true,sleep:true,price:48000,tag:'個室',d:'リエンジャンのプレミアムライン。完全個室の再生プログラム。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝블랙+강남+서울'}
+  {n:'プムグローバル 明洞店',area:'明洞',areaNote:'明洞駅8番出口 徒歩1分',type:'factory',worry:['pore','acne','spot','scar'],jp:true,sleep:true,pop:'jp',sun:true,price:15000,tag:'ポテンツァ',d:'破格の価格で渡韓初心者の入門に最適。日本語対応も手厚い大型チェーン。',u:'https://link.inpock.co.kr/ppeum_jp',ut:'公式（日本語）',map:'https://maps.google.com/?q=프름글로벌+명동점+서울'},
+  {n:'リエンジャン 明洞店',area:'明洞',areaNote:'明洞エリア',type:'factory',worry:['spot','pore','dry'],jp:true,sleep:true,pop:'both',sun:true,price:12000,tag:'メガ院',d:'20年運営・アジア12支店のメガクリニック。安定の定番院。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝+명동점+서울'},
+  {n:'YOU&I皮膚科 明洞店',area:'明洞',areaNote:'明洞駅4番出口前',type:'factory',worry:['dry','spot'],jp:true,sleep:false,pop:'jp',sun:false,price:18000,tag:'水光肌',d:'バランスが良く日本人リピーター多数。水光注射が看板。',u:'https://ameblo.jp/skinuni114/',ut:'公式ブログ',map:'https://maps.google.com/?q=유앤아이피부과+명동점+서울'},
+  {n:'明洞MUSEクリニック',area:'明洞',areaNote:'明洞駅5番出口 徒歩3分',type:'premium',worry:['spot','dry','wrinkle'],jp:true,sleep:false,pop:'jp',sun:false,price:25000,tag:'トーニング',d:'明洞の老舗人気院。日本人限定プロモも実施。落ち着いた接客。',u:'https://ameblo.jp/musemdjp/',ut:'公式ブログ',map:'https://maps.google.com/?q=뮤즈클리닉+명동+서울'},
+  {n:'リーダース皮膚科 明洞',area:'明洞',areaNote:'会賢駅1番出口 直結',type:'premium',worry:['acne','pore','dry','scar'],jp:true,sleep:true,pop:'both',sun:true,price:28000,tag:'ニキビ',d:'ソウル大出身の専門医ぞろいの実力派。難治性ニキビにも強い。',u:'https://japan.leaders-md.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리더스피부과+명동점+서울'},
+  {n:'Abijouクリニック 明洞',area:'明洞',areaNote:'乙支路入口駅6番出口',type:'premium',worry:['wrinkle','pore','acne','scar'],jp:true,sleep:true,pop:'kr',sun:false,price:40000,tag:'ダブロ',d:'芸能人の来院多数。上品で丁寧な施術とプライベート空間。',u:'https://abijouclinic.com/jpn/',ut:'公式（日本語）',map:'https://maps.google.com/?q=아비쥬클리닉+명동+서울'},
+  {n:'WIZ&美',area:'明洞',areaNote:'乙支路入口駅6番出口 徒歩3分',type:'premium',worry:['wrinkle','spot'],jp:true,sleep:false,pop:'jp',sun:false,price:35000,tag:'個室',d:'時間をかけたカウンセリングが好評。完全個室でじっくり相談。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=5384',ut:'コネスト詳細',map:'https://maps.google.com/?q=위즈앤미+명동+서울'},
+  {n:'リエンジャン 江南本店',area:'江南',areaNote:'江南大路沿いタワー内',type:'factory',worry:['spot','dry','pore'],jp:true,sleep:true,pop:'both',sun:true,price:12000,tag:'メガ院',d:'アジア最大級ネットワークの本店。スケール感のある定番院。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝+강남본점+서울'},
+  {n:'プムグローバル 江南店',area:'江南',areaNote:'江南エリア',type:'factory',worry:['pore','acne','wrinkle','scar'],jp:true,sleep:true,pop:'jp',sun:true,price:15000,tag:'ポテンツァ',d:'2023年オープンの外国人向け店舗。日本語コーディネーター在籍。',u:'https://link.inpock.co.kr/ppeum_jp',ut:'公式（日本語）',map:'https://maps.google.com/?q=프름글로벌+강남점+서울'},
+  {n:'シャインビーム 江南店',area:'江南',areaNote:'江南駅11番出口 徒歩2分',type:'factory',worry:['pore','acne','scar'],jp:true,sleep:false,pop:'jp',sun:true,price:13000,tag:'ポテンツァ',d:'ポテンツァの安さで話題。日本語サイト完備で予約しやすい。',u:'https://gangnam.shinebeam.co.kr/ja',ut:'公式（日本語）',map:'https://maps.google.com/?q=샤인빔+강남점+서울'},
+  {n:'YOU&I皮膚科 江南店',area:'江南',areaNote:'江南駅エリア',type:'factory',worry:['dry','spot'],jp:true,sleep:false,pop:'both',sun:false,price:18000,tag:'水光肌',d:'バランス型で幅広く支持。水光・美肌注射のメニューが豊富。',u:'https://ameblo.jp/skinuni114/',ut:'公式ブログ',map:'https://maps.google.com/?q=유앤아이피부과+강남점+서울'},
+  {n:'ラミチェ皮膚科',area:'江南',areaNote:'蚕室・江南駅から約15分',type:'premium',worry:['acne','pore','spot','scar'],jp:true,sleep:true,pop:'kr',sun:false,price:30000,tag:'レーザー',d:'51種以上のレーザー設備の本格派。院長が薬剤を個別調整。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=30798',ut:'予約ページ',map:'https://maps.google.com/?q=라미체피부과+서울'},
+  {n:'Seye Clinic',area:'江南',areaNote:'新ノニョン駅7番出口 徒歩1分',type:'premium',worry:['spot','wrinkle','dry'],jp:true,sleep:true,pop:'kr',sun:false,price:45000,tag:'最新機器',d:'江南最大級規模。芸能人御用達の洗練空間。最新機器を先行導入。',u:'https://seyeclinic.com/ja',ut:'公式（日本語）',map:'https://maps.google.com/?q=세이에클리닉+강남+서울'},
+  {n:'チョンダムオラクル皮膚科',area:'江南',areaNote:'清潭洞',type:'premium',worry:['wrinkle','spot','dry'],jp:true,sleep:true,pop:'kr',sun:false,price:50000,tag:'再生医療',d:'国内外100院超のオラクル旗艦院。再生医療・点滴メニューが先進的。',u:'https://www.konest.com/contents/clinic_mise_detail.html?id=7140',ut:'予約ページ',map:'https://maps.google.com/?q=청담오라클피부과+서울'},
+  {n:'LIENJANG BLACK 江南',area:'江南',areaNote:'江南エリア',type:'premium',worry:['wrinkle','dry'],jp:true,sleep:true,pop:'both',sun:true,price:48000,tag:'個室',d:'リエンジャンのプレミアムライン。完全個室の再生プログラム。',u:'https://jplienjang.com/',ut:'公式（日本語）',map:'https://maps.google.com/?q=리엔쟝블랙+강남+서울'}
 ];
 
 var WORRY_LBL={pore:'毛穴・イチゴ鼻',wrinkle:'小顔・たるみ',dry:'ツヤ肌・水光肌',spot:'シミ・くすみ',acne:'ニキビ・赤み',scar:'ニキビ跡・凸凹'};
@@ -481,9 +504,50 @@ function clinicMenu(c){
 }
 
 /* ===== state ===== */
-var sel={type:null,concern:[],support:[],budget:200000};
+var sel={area:[],type:null,concern:[],support:[],budget:200000};
 
 document.getElementById('hs-count').textContent=CLINICS.length;
+
+function toggleArea(el){
+  var a=el.dataset.a;
+  var i=sel.area.indexOf(a);
+  if(i>-1){sel.area.splice(i,1);el.classList.remove('on');}
+  else{sel.area.push(a);el.classList.add('on');}
+  renderMap();
+  render();
+}
+
+/* ソウル簡易マップ：漢江を挟んで北=明洞／南=江南 */
+function renderMap(){
+  var mdOn=sel.area.indexOf('明洞')>-1;
+  var gnOn=sel.area.indexOf('江南')>-1;
+  var none=sel.area.length===0;
+  var mdActive=none||mdOn, gnActive=none||gnOn;
+  var svg=''
+    +'<svg viewBox="0 0 400 230" style="width:100%;max-width:420px;display:block;margin:0 auto" role="img" aria-label="ソウル市内、明洞と江南の位置を示す簡易地図">'
+    +'<rect x="0" y="0" width="400" height="230" rx="14" fill="var(--paper-2)"/>'
+    +'<path d="M0,128 C70,118 110,142 170,130 C230,118 270,140 330,126 C360,120 380,124 400,118 L400,150 C380,156 360,152 330,158 C270,172 230,150 170,162 C110,174 70,150 0,160 Z" fill="#CFE3EE" opacity="0.9"/>'
+    +'<text x="200" y="146" text-anchor="middle" font-size="10" fill="#6F92A8" letter-spacing="2" font-family="Zen Kaku Gothic New, sans-serif">HAN RIVER 漢江</text>'
+    +'<g style="cursor:pointer" onclick="quickArea(\'明洞\')">'
+    +'<circle cx="150" cy="76" r="30" fill="'+(mdActive?'var(--rouge)':'var(--line)')+'" opacity="'+(mdActive?'0.16':'0.5')+'"/>'
+    +'<circle cx="150" cy="76" r="7" fill="'+(mdActive?'var(--rouge)':'var(--ink-faint)')+'"/>'
+    +'<text x="150" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="'+(mdActive?'var(--rouge-deep)':'var(--ink-faint)')+'" font-family="Zen Old Mincho, serif">明洞</text>'
+    +'<text x="150" y="100" text-anchor="middle" font-size="9" fill="var(--ink-faint)" font-family="Zen Kaku Gothic New, sans-serif">中区・江北エリア</text>'
+    +'</g>'
+    +'<g style="cursor:pointer" onclick="quickArea(\'江南\')">'
+    +'<circle cx="255" cy="186" r="34" fill="'+(gnActive?'var(--rouge)':'var(--line)')+'" opacity="'+(gnActive?'0.16':'0.5')+'"/>'
+    +'<circle cx="255" cy="186" r="7" fill="'+(gnActive?'var(--rouge)':'var(--ink-faint)')+'"/>'
+    +'<text x="255" y="206" text-anchor="middle" font-size="13" font-weight="700" fill="'+(gnActive?'var(--rouge-deep)':'var(--ink-faint)')+'" font-family="Zen Old Mincho, serif">江南</text>'
+    +'<text x="255" y="222" text-anchor="middle" font-size="9" fill="var(--ink-faint)" font-family="Zen Kaku Gothic New, sans-serif">江南区・漢江南エリア</text>'
+    +'</g>'
+    +'<text x="370" y="20" text-anchor="end" font-size="9" fill="var(--ink-faint)" letter-spacing="1" font-family="Zen Kaku Gothic New, sans-serif">SEOUL ソウル市内（簡略図）</text>'
+    +'</svg>';
+  document.getElementById('area-map-wrap').innerHTML=svg;
+}
+function quickArea(a){
+  var el=document.querySelector('#area-chips .chip[data-a="'+a+'"]');
+  if(el) toggleArea(el);
+}
 
 function toggleType(el){
   var t=el.dataset.type;
@@ -509,21 +573,25 @@ function setBudget(v){
   render();
 }
 function resetFinder(){
-  sel={type:null,concern:[],support:[],budget:200000};
+  sel={area:[],type:null,concern:[],support:[],budget:200000};
   document.querySelectorAll('.type-card,.chip').forEach(function(e){e.classList.remove('on');});
   document.getElementById('budget').value=200000;
   document.getElementById('budget-val').textContent='上限なし';
+  renderMap();
   render();
 }
 
 /* ===== scoring & filter ===== */
 function matchList(){
   return CLINICS.filter(function(c){
+    if(sel.area.length && sel.area.indexOf(c.area)===-1) return false;
     if(sel.type && c.type!==sel.type) return false;
     if(sel.budget<200000 && c.price>sel.budget) return false;
     // support are AND conditions (掛け合わせ)
-    if(sel.support.indexOf('jp')>-1 && !c.jp) return false;
     if(sel.support.indexOf('sleep')>-1 && !c.sleep) return false;
+    if(sel.support.indexOf('sun')>-1 && !c.sun) return false;
+    if(sel.support.indexOf('popjp')>-1 && c.pop!=='jp' && c.pop!=='both') return false;
+    if(sel.support.indexOf('popkr')>-1 && c.pop!=='kr' && c.pop!=='both') return false;
     return true;
   }).map(function(c){
     // concern is a ranking signal (more matched worries = higher)
@@ -543,7 +611,7 @@ function render(){
   document.getElementById('match-count').textContent=matched.length;
 
   var box=document.getElementById('results');
-  var hasFilter=sel.type||sel.concern.length||sel.support.length||sel.budget<200000;
+  var hasFilter=sel.area.length||sel.type||sel.concern.length||sel.support.length||sel.budget<200000;
 
   if(matched.length===0){
     box.innerHTML='<div class="empty"><i class="ti ti-mood-search"></i>条件に合うクリニックが見つかりませんでした。<br>予算を上げるか、サポート条件をひとつ外してみてください。</div>';
@@ -565,6 +633,9 @@ function render(){
     var typeBadge='<span class="type-badge '+c.type+'">'+(c.type==='factory'?'🏭 工場型':'💎 上質型')+'</span>';
 
     // matched worry pills
+    var POP_LBL={jp:'🇯🇵 日本人に人気',kr:'🇰🇷 韓国人に人気',both:'🇯🇵🇰🇷 日韓ともに人気'};
+    var popHtml='<span class="t-pill">'+POP_LBL[c.pop]+'</span>';
+
     var wpills=c.worry.map(function(w){
       var on=sel.concern.indexOf(w)>-1;
       return '<span class="t-pill" style="'+(on?'background:var(--rouge);color:#fff':'')+'">'+WORRY_LBL[w]+'</span>';
@@ -582,16 +653,25 @@ function render(){
         + '<p class="menu-price"><i class="ti ti-tag"></i> 目安 <b>'+m.price+'</b>／1回</p></div></div>';
     });
 
+    var typeIc=c.type==='factory'?'ti-building-factory-2':'ti-diamond';
+    var thumbHtml='<div class="kcard-thumb '+c.type+'">'
+      + '<i class="ti '+typeIc+' thumb-ic"></i>'
+      + '<span class="thumb-label">'+(c.type==='factory'?'工場型クリニック':'上質・高品質型クリニック')+'</span>'
+      + (c.u?'<a class="thumb-photo-link" href="'+c.u+'" target="_blank" rel="noopener"><i class="ti ti-photo"></i>院内写真を見る</a>':'')
+      + '</div>';
+
     html+='<div class="kcard" style="animation-delay:'+(idx*0.06)+'s">'
       + rankHtml
       + '<div class="kcard-cols"><div class="kcard-left">'
+      + thumbHtml
       + '<div class="kcard-top"><div style="flex:1"><h3>'+c.n+'</h3>'
       + '<span class="area"><i class="ti ti-map-pin"></i> '+c.area+'（'+c.areaNote+'）</span></div>'
       + typeBadge+'</div>'
       + '<p class="kcard-desc">'+c.d+'</p>'
       + '<dl class="spec-table">'
-      + '<div class="spec-row"><dt><i class="ti ti-language"></i>日本語</dt><dd>'+(c.jp?yes('日本人通訳が常駐'):no('通訳の常駐なし'))+'</dd></div>'
+      + '<div class="spec-row"><dt><i class="ti ti-flag"></i>人気層</dt><dd>'+popHtml+'</dd></div>'
       + '<div class="spec-row"><dt><i class="ti ti-zzz"></i>睡眠麻酔</dt><dd>'+(c.sleep?yes('対応可'):no('非対応'))+'</dd></div>'
+      + '<div class="spec-row"><dt><i class="ti ti-calendar-event"></i>日曜営業</dt><dd>'+(c.sun?yes('日曜も診療'):no('日曜定休'))+'</dd></div>'
       + '<div class="spec-row"><dt><i class="ti ti-sparkles"></i>得意な悩み</dt><dd>'+wpills+'</dd></div>'
       + '</dl>'
       + '<div class="kcard-foot">'
@@ -608,7 +688,5 @@ function render(){
   box.innerHTML=html;
 }
 
+renderMap();
 render();
-</script>
-</body>
-</html>
